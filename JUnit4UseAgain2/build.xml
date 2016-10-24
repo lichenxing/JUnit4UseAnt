@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="GBK" ?>
 
-<project name="JUnit4UseAgain2" default="init">
+<project name="JUnit4UseAgain2" default="junit and report">
 
 	<!-- properies -->
 
