@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="GBK" ?>
+
+<project name="JUnit4UseAgain2" default="init">
+
+	<!-- properies -->
+
+	<property name="src.dir" value="src" />
+	<property name="report.dir" value="report" />
+	<property name="classes.dir" value="classes" />
+	<property name="lib.dir" value="lib" />
+	<property name="dist.dir" value="dist" />
+	<property name="doc.dir" value="doc" />
+	<property name="output.dir" value="bin"/>
+    <property name="build.path" value="build"/>
+
+	<!-- 定义classpath -->
+
+	<path id="master-classpath">
+         
+		<fileset file="${lib.dir}/*.jar" />
+		<pathelement path="${classes.dir}" />
+	</path>
+
+	<!-- 初始化任务 -->
+
+	<target name="init">
+	 <echo>初始化成功！</echo>
+	</target>
+
+	<!-- 编译 -->
+
+	<target name="compile" depends="init" description="compile the source files">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${lib.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}"  includeAntRuntime="false">
+			<classpath refid="master-classpath" />
+		</javac>
+		<echo>编译成功！</echo>
+	</target>
+
+	<!-- 测试 -->
+
+	<target name="test" depends="compile" description="run junit test">
+		<mkdir dir="${report.dir}" />
+		<junit printsummary="on" haltonfailure="false" failureproperty="tests.failed" showoutput="true">
+			<classpath refid="master-classpath" />
+			<formatter type="plain" />
+			<batchtest todir="${report.dir}">
+				<fileset dir="${classes.dir}">
+					<include name="**/*Test.*" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="tests.failed">   
+        </fail>
+        <echo>测试成功！</echo>
+	</target>
+
+	<!-- 打包成jar -->
+
+	<target name="pack" depends="compile" description="make .jar file">
+		<mkdir dir="${dist.dir}" />
+		<jar destfile="${dist.dir}/JUnit4UseAgain2.jar" basedir="${classes.dir}">
+			<exclude name="**/*Test.*" />
+			<exclude name="**/Test*.*" />
+		</jar>
+	<echo>打成jar包成功！</echo>
+	</target>
+
+	<!-- 输出api文档 -->
+
+	<target name="doc" depends="pack" description="create api doc">
+		<mkdir dir="${doc.dir}" />
+		<javadoc destdir="${doc.dir}" author="true" version="true" use="true" windowtitle="Test API">
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="**/**" />
+			</packageset>
+			<doctitle>
+				<![CDATA[<h1>Ant, test</h1>]]>
+		    </doctitle>
+		    <bottom>
+			    <![CDATA[<i>All Rights Reserved.</i>]]>
+			</bottom>
+         </javadoc>
+         <echo>API输出成功！</echo>  
+   </target>
+   
+   <!--生成测试报告-->
+   <target name="junit and report" depends="test">
+   <junit printsummary="on" fork="true" showoutput="true">
+      <classpath>
+          <fileset dir="lib"  includes="**/*.jar"/>
+          <pathelement path="${output.dir}"/>
+      </classpath>
+   <formatter type="xml" />
+       <batchtest todir="${report.dir}">
+          <fileset dir="${output.dir}">
+                <include name="**/Test*.*"/>
+          </fileset>
+       </batchtest>
+    </junit>
+    
+  <junitreport todir="${report.dir}">
+      <fileset dir="${report.dir}">
+         <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${report.dir}" />
+  </junitreport>
+  
+</target>
+
+
+    <!-- 清除Junit生成的报表文档 -->   
+    <target name="delete">
+        <delete dir="${report.dir}"/>
+        <echo>清除Junit生成的报表文档成功！</echo>
+    </target>
+    
+    
+    <!-- 清除历史编译class --> 
+    <target name="clean" description="clean">
+        <delete dir="${build.path}"/>
+        <echo>清除历史编译成功！</echo>
+    </target>
+   
+   
+   
+   
+</project>
