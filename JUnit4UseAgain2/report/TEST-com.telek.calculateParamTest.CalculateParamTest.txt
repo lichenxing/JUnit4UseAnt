@@ -1,5 +1,5 @@
 Testsuite: com.telek.calculateParamTest.CalculateParamTest
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec
 
 Testcase: testAdd[0] took 0.01 sec
 Testcase: testAdd[1] took 0 sec
